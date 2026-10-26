@@ -1,0 +1,13 @@
+{
+  "name": "sica-firebase",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "SICA - Carga de datos de demostracion en Firebase",
+  "scripts": {
+    "seed": "node --env-file=.env scripts/seed.mjs"
+  },
+  "dependencies": {
+    "firebase": "^11.0.0"
+  }
+}

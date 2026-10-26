@@ -1,0 +1,468 @@
+{
+  "sucursales": [
+    {
+      "id": "casa-matriz",
+      "nombre": "Casa Matriz",
+      "estado": "activa",
+      "radioGeocercaOpcional": 100
+    },
+    {
+      "id": "suc-1",
+      "nombre": "Sucursal 1",
+      "estado": "activa",
+      "radioGeocercaOpcional": 100
+    },
+    {
+      "id": "suc-2",
+      "nombre": "Sucursal 2",
+      "estado": "activa",
+      "radioGeocercaOpcional": 100
+    },
+    {
+      "id": "suc-3",
+      "nombre": "Sucursal 3",
+      "estado": "activa",
+      "radioGeocercaOpcional": 100
+    },
+    {
+      "id": "suc-4",
+      "nombre": "Sucursal 4",
+      "estado": "activa",
+      "radioGeocercaOpcional": 100
+    },
+    {
+      "id": "suc-5",
+      "nombre": "Sucursal 5",
+      "estado": "activa",
+      "radioGeocercaOpcional": 100
+    },
+    {
+      "id": "suc-6",
+      "nombre": "Sucursal 6",
+      "estado": "activa",
+      "radioGeocercaOpcional": 100
+    }
+  ],
+  "horarios": [
+    {
+      "id": "hor-0800",
+      "nombre": "Turno 08:00 a 17:00",
+      "horaEntrada": "08:00",
+      "horaSalida": "17:00",
+      "minutosTolerancia": 10,
+      "diasAplicables": [
+        "lun",
+        "mar",
+        "mie",
+        "jue",
+        "vie"
+      ]
+    },
+    {
+      "id": "hor-0900",
+      "nombre": "Turno 09:00 a 18:00",
+      "horaEntrada": "09:00",
+      "horaSalida": "18:00",
+      "minutosTolerancia": 10,
+      "diasAplicables": [
+        "lun",
+        "mar",
+        "mie",
+        "jue",
+        "vie"
+      ]
+    },
+    {
+      "id": "hor-0730",
+      "nombre": "Turno 07:30 a 16:30",
+      "horaEntrada": "07:30",
+      "horaSalida": "16:30",
+      "minutosTolerancia": 10,
+      "diasAplicables": [
+        "lun",
+        "mar",
+        "mie",
+        "jue",
+        "vie"
+      ]
+    }
+  ],
+  "usuarios": [
+    {
+      "codigoEmpleado": "ADM-001",
+      "nombreCompleto": "Administrador de prueba",
+      "correo": "admin@sica-demo.test",
+      "rol": "admin",
+      "sucursalId": "casa-matriz",
+      "horarioId": "hor-0800",
+      "estado": "activo"
+    },
+    {
+      "codigoEmpleado": "RRHH-001",
+      "nombreCompleto": "RR. HH. de prueba",
+      "correo": "rrhh@sica-demo.test",
+      "rol": "rrhh",
+      "sucursalId": "casa-matriz",
+      "horarioId": "hor-0800",
+      "estado": "activo"
+    },
+    {
+      "codigoEmpleado": "SUP-001",
+      "nombreCompleto": "Supervisor de prueba (Sucursal 1)",
+      "correo": "supervisor1@sica-demo.test",
+      "rol": "supervisor",
+      "sucursalId": "suc-1",
+      "horarioId": "hor-0800",
+      "estado": "activo"
+    },
+    {
+      "codigoEmpleado": "EMP-001",
+      "nombreCompleto": "Empleado de prueba 001",
+      "correo": "emp001@sica-demo.test",
+      "rol": "empleado",
+      "sucursalId": "suc-1",
+      "horarioId": "hor-0800",
+      "estado": "activo"
+    },
+    {
+      "codigoEmpleado": "EMP-002",
+      "nombreCompleto": "Empleado de prueba 002",
+      "correo": "emp002@sica-demo.test",
+      "rol": "empleado",
+      "sucursalId": "suc-2",
+      "horarioId": "hor-0800",
+      "estado": "activo"
+    },
+    {
+      "codigoEmpleado": "EMP-003",
+      "nombreCompleto": "Empleado de prueba 003",
+      "correo": "emp003@sica-demo.test",
+      "rol": "empleado",
+      "sucursalId": "suc-3",
+      "horarioId": "hor-0900",
+      "estado": "activo"
+    },
+    {
+      "codigoEmpleado": "EMP-004",
+      "nombreCompleto": "Empleado de prueba 004",
+      "correo": "emp004@sica-demo.test",
+      "rol": "empleado",
+      "sucursalId": "suc-4",
+      "horarioId": "hor-0800",
+      "estado": "activo"
+    },
+    {
+      "codigoEmpleado": "EMP-005",
+      "nombreCompleto": "Empleado de prueba 005",
+      "correo": "emp005@sica-demo.test",
+      "rol": "empleado",
+      "sucursalId": "suc-5",
+      "horarioId": "hor-0730",
+      "estado": "activo"
+    },
+    {
+      "codigoEmpleado": "EMP-006",
+      "nombreCompleto": "Empleado de prueba 006",
+      "correo": "emp006@sica-demo.test",
+      "rol": "empleado",
+      "sucursalId": "suc-6",
+      "horarioId": "hor-0800",
+      "estado": "activo"
+    }
+  ],
+  "marcas": [
+    {
+      "id": "m-001",
+      "codigo": "EMP-001",
+      "tipo": "entrada",
+      "fechaHoraServidor": "2026-10-19T07:56:00-06:00",
+      "origen": "demo",
+      "sucursalId": "suc-1",
+      "estadoValidacion": "valida"
+    },
+    {
+      "id": "m-002",
+      "codigo": "EMP-001",
+      "tipo": "salida",
+      "fechaHoraServidor": "2026-10-19T17:02:00-06:00",
+      "origen": "demo",
+      "sucursalId": "suc-1",
+      "estadoValidacion": "valida"
+    },
+    {
+      "id": "m-003",
+      "codigo": "EMP-002",
+      "tipo": "entrada",
+      "fechaHoraServidor": "2026-10-19T08:19:00-06:00",
+      "origen": "demo",
+      "sucursalId": "suc-2",
+      "estadoValidacion": "tardanza"
+    },
+    {
+      "id": "m-004",
+      "codigo": "EMP-002",
+      "tipo": "salida",
+      "fechaHoraServidor": "2026-10-19T17:01:00-06:00",
+      "origen": "demo",
+      "sucursalId": "suc-2",
+      "estadoValidacion": "valida"
+    },
+    {
+      "id": "m-005",
+      "codigo": "EMP-003",
+      "tipo": "entrada",
+      "fechaHoraServidor": "2026-10-19T08:58:00-06:00",
+      "origen": "demo",
+      "sucursalId": "suc-3",
+      "estadoValidacion": "valida"
+    },
+    {
+      "id": "m-006",
+      "codigo": "EMP-004",
+      "tipo": "salida",
+      "fechaHoraServidor": "2026-10-19T17:03:00-06:00",
+      "origen": "demo",
+      "sucursalId": "suc-4",
+      "estadoValidacion": "secuencia_irregular"
+    },
+    {
+      "id": "m-007",
+      "codigo": "EMP-006",
+      "tipo": "entrada",
+      "fechaHoraServidor": "2026-10-19T08:01:00-06:00",
+      "origen": "demo",
+      "sucursalId": "suc-6",
+      "estadoValidacion": "valida"
+    },
+    {
+      "id": "m-008",
+      "codigo": "EMP-006",
+      "tipo": "salida",
+      "fechaHoraServidor": "2026-10-19T16:59:00-06:00",
+      "origen": "demo",
+      "sucursalId": "suc-6",
+      "estadoValidacion": "valida"
+    }
+  ],
+  "incidencias_solicitudes": [
+    {
+      "id": "inc-001",
+      "codigo": "EMP-003",
+      "sucursalId": "suc-3",
+      "tipo": "omision_salida",
+      "fechaInicio": "2026-10-19",
+      "fechaFin": "2026-10-19",
+      "motivo": "Dato de demostración: olvidé marcar la salida.",
+      "estado": "pendiente",
+      "revisadoPor": null,
+      "observacion": null
+    },
+    {
+      "id": "inc-002",
+      "codigo": "EMP-002",
+      "sucursalId": "suc-2",
+      "tipo": "justificacion",
+      "fechaInicio": "2026-10-19",
+      "fechaFin": "2026-10-19",
+      "motivo": "Dato de demostración: tardanza por emergencia.",
+      "estado": "aprobada",
+      "revisadoPor": "SUP-001",
+      "observacion": "Aprobada en la demostración."
+    }
+  ],
+  "auditoria_logs": [
+    {
+      "id": "aud-001",
+      "accion": "aprobar_incidencia",
+      "entidad": "incidencias_solicitudes",
+      "entidadId": "inc-002",
+      "motivo": "Dato de demostración: justificación aceptada.",
+      "valorAnterior": {
+        "estado": "pendiente"
+      },
+      "valorNuevo": {
+        "estado": "aprobada"
+      }
+    },
+    {
+      "id": "aud-002",
+      "accion": "carga_datos_demo",
+      "entidad": "sistema",
+      "entidadId": "seed",
+      "motivo": "Carga inicial de datos ficticios.",
+      "valorAnterior": null,
+      "valorNuevo": {
+        "registros": "demo"
+      }
+    }
+  ],
+  "asignaciones_horario": [
+    {
+      "id": "asig-001",
+      "codigo": "EMP-001",
+      "horarioId": "hor-0800",
+      "fechaInicio": "2026-10-01T00:00:00-06:00",
+      "fechaFin": null,
+      "creadoPor": "ADM-001"
+    },
+    {
+      "id": "asig-002",
+      "codigo": "EMP-002",
+      "horarioId": "hor-0800",
+      "fechaInicio": "2026-10-01T00:00:00-06:00",
+      "fechaFin": null,
+      "creadoPor": "ADM-001"
+    },
+    {
+      "id": "asig-003",
+      "codigo": "EMP-003",
+      "horarioId": "hor-0900",
+      "fechaInicio": "2026-10-01T00:00:00-06:00",
+      "fechaFin": null,
+      "creadoPor": "ADM-001"
+    },
+    {
+      "id": "asig-004",
+      "codigo": "EMP-004",
+      "horarioId": "hor-0800",
+      "fechaInicio": "2026-10-01T00:00:00-06:00",
+      "fechaFin": null,
+      "creadoPor": "ADM-001"
+    },
+    {
+      "id": "asig-005",
+      "codigo": "EMP-005",
+      "horarioId": "hor-0730",
+      "fechaInicio": "2026-10-01T00:00:00-06:00",
+      "fechaFin": null,
+      "creadoPor": "ADM-001"
+    },
+    {
+      "id": "asig-006",
+      "codigo": "EMP-006",
+      "horarioId": "hor-0800",
+      "fechaInicio": "2026-10-01T00:00:00-06:00",
+      "fechaFin": null,
+      "creadoPor": "ADM-001"
+    }
+  ],
+  "jornadas": [
+    {
+      "id": "j-001",
+      "codigo": "EMP-001",
+      "fecha": "2026-10-19",
+      "primeraEntrada": "2026-10-19T07:56:00-06:00",
+      "ultimaSalida": "2026-10-19T17:02:00-06:00",
+      "minutosTardanza": 0,
+      "estado": "completa",
+      "alertas": [],
+      "periodoId": "2026-10"
+    },
+    {
+      "id": "j-002",
+      "codigo": "EMP-002",
+      "fecha": "2026-10-19",
+      "primeraEntrada": "2026-10-19T08:19:00-06:00",
+      "ultimaSalida": "2026-10-19T17:01:00-06:00",
+      "minutosTardanza": 19,
+      "estado": "completa",
+      "alertas": [
+        "tardanza"
+      ],
+      "periodoId": "2026-10"
+    },
+    {
+      "id": "j-003",
+      "codigo": "EMP-003",
+      "fecha": "2026-10-19",
+      "primeraEntrada": "2026-10-19T08:58:00-06:00",
+      "ultimaSalida": null,
+      "minutosTardanza": 0,
+      "estado": "pendiente",
+      "alertas": [
+        "falta_salida"
+      ],
+      "periodoId": "2026-10"
+    },
+    {
+      "id": "j-004",
+      "codigo": "EMP-004",
+      "fecha": "2026-10-19",
+      "primeraEntrada": null,
+      "ultimaSalida": "2026-10-19T17:03:00-06:00",
+      "minutosTardanza": 0,
+      "estado": "irregular",
+      "alertas": [
+        "salida_sin_entrada"
+      ],
+      "periodoId": "2026-10"
+    },
+    {
+      "id": "j-005",
+      "codigo": "EMP-005",
+      "fecha": "2026-10-19",
+      "primeraEntrada": null,
+      "ultimaSalida": null,
+      "minutosTardanza": 0,
+      "estado": "historica_pendiente_validacion",
+      "alertas": [
+        "importada_de_libro"
+      ],
+      "periodoId": "2026-10"
+    },
+    {
+      "id": "j-006",
+      "codigo": "EMP-006",
+      "fecha": "2026-10-19",
+      "primeraEntrada": "2026-10-19T08:01:00-06:00",
+      "ultimaSalida": "2026-10-19T16:59:00-06:00",
+      "minutosTardanza": 0,
+      "estado": "completa",
+      "alertas": [],
+      "periodoId": "2026-10"
+    }
+  ],
+  "horas_extras_autorizadas": [
+    {
+      "id": "he-001",
+      "codigo": "EMP-001",
+      "fecha": "2026-10-20",
+      "horasAutorizadas": 2,
+      "autorizadoPor": "SUP-001",
+      "motivo": "Dato de demostración: inventario mensual.",
+      "estado": "vigente"
+    }
+  ],
+  "cierres_periodo": [
+    {
+      "id": "2026-10",
+      "fechaInicio": "2026-10-01",
+      "fechaFin": "2026-10-31",
+      "sucursalIdOpcional": null,
+      "estado": "abierto",
+      "revisadoPor": null,
+      "fechaCierre": null,
+      "resumenVersion": 1
+    }
+  ],
+  "integraciones_eventos": [
+    {
+      "id": "ev-001",
+      "proveedor": "por_definir",
+      "dispositivoId": "dev-demo-01",
+      "eventoExternoId": "ext-0001",
+      "firmaValidada": true,
+      "estadoProcesamiento": "procesado",
+      "motivoRechazo": null
+    },
+    {
+      "id": "ev-002",
+      "proveedor": "por_definir",
+      "dispositivoId": "dev-demo-01",
+      "eventoExternoId": "ext-0001",
+      "firmaValidada": true,
+      "estadoProcesamiento": "duplicado",
+      "motivoRechazo": "Evento repetido (demostración)."
+    }
+  ]
+}

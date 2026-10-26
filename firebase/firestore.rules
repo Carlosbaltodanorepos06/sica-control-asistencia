@@ -1,0 +1,155 @@
+rules_version = '2';
+
+// SICA - Reglas de seguridad de Firestore (version academica)
+// Roles: empleado | supervisor | rrhh | admin
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---------- Funciones de ayuda ----------
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function perfil() {
+      return get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data;
+    }
+
+    function rol() {
+      return perfil().rol;
+    }
+
+    function activo() {
+      return perfil().estado == 'activo';
+    }
+
+    function esAdmin() {
+      return signedIn() && activo() && rol() == 'admin';
+    }
+
+    function esRrhh() {
+      return signedIn() && activo() && rol() == 'rrhh';
+    }
+
+    function esSupervisorDe(sucursalId) {
+      return signedIn() && activo() && rol() == 'supervisor'
+             && perfil().sucursalId == sucursalId;
+    }
+
+    // ---------- Catalogos: todos leen, solo admin escribe ----------
+    match /sucursales/{id} {
+      allow read: if signedIn();
+      allow write: if esAdmin();
+    }
+
+    match /horarios/{id} {
+      allow read: if signedIn();
+      allow write: if esAdmin();
+    }
+
+    // ---------- Usuarios ----------
+    match /usuarios/{uid} {
+      allow read: if signedIn() && (
+        request.auth.uid == uid ||
+        esAdmin() || esRrhh() ||
+        esSupervisorDe(resource.data.sucursalId)
+      );
+      allow write: if esAdmin();
+    }
+
+    // ---------- Marcas: NUNCA se editan ni se borran (RNF-03) ----------
+    match /marcas/{id} {
+      allow read: if signedIn() && (
+        resource.data.usuarioId == request.auth.uid ||
+        esAdmin() || esRrhh() ||
+        esSupervisorDe(resource.data.sucursalId)
+      );
+      // Un empleado solo puede crear marcas a su nombre.
+      // El admin puede crear marcas para cargar datos de demostracion.
+      allow create: if signedIn() && (
+        request.resource.data.usuarioId == request.auth.uid ||
+        esAdmin()
+      );
+      allow update, delete: if false;
+    }
+
+    // ---------- Incidencias y solicitudes ----------
+    match /incidencias_solicitudes/{id} {
+      allow read: if signedIn() && (
+        resource.data.usuarioId == request.auth.uid ||
+        esAdmin() || esRrhh() ||
+        esSupervisorDe(resource.data.sucursalId)
+      );
+      // Toda solicitud nueva nace como "pendiente" y a nombre de quien la crea
+      allow create: if signedIn() && (
+        (request.resource.data.usuarioId == request.auth.uid
+         && request.resource.data.estado == 'pendiente') ||
+        esAdmin()
+      );
+      // Aprobar o rechazar: supervisor de esa sucursal, RR. HH. o admin
+      allow update: if signedIn() && (
+        esAdmin() || esRrhh() ||
+        esSupervisorDe(resource.data.sucursalId)
+      );
+      allow delete: if false;
+    }
+
+    // ---------- Auditoria: solo se agrega, nunca se cambia (RNF-11) ----------
+    match /auditoria_logs/{id} {
+      allow read: if esAdmin() || esRrhh();
+      allow create: if signedIn() && request.resource.data.actorUid == request.auth.uid;
+      allow update, delete: if false;
+    }
+
+    // ---------- Asignaciones de horario ----------
+    match /asignaciones_horario/{id} {
+      allow read: if signedIn() && (
+        resource.data.usuarioId == request.auth.uid || esAdmin() || esRrhh()
+      );
+      allow write: if esAdmin();
+    }
+
+    // ---------- Jornadas (resumen calculado, regenerable desde las marcas) ----------
+    match /jornadas/{id} {
+      allow read: if signedIn() && (
+        resource.data.usuarioId == request.auth.uid ||
+        esAdmin() || esRrhh() ||
+        esSupervisorDe(resource.data.sucursalId)
+      );
+      // En la version conectada las generara la API; por ahora solo el admin
+      allow write: if esAdmin();
+    }
+
+    // ---------- Horas extras autorizadas ----------
+    match /horas_extras_autorizadas/{id} {
+      allow read: if signedIn() && (
+        resource.data.usuarioId == request.auth.uid ||
+        esAdmin() || esRrhh() ||
+        esSupervisorDe(resource.data.sucursalId)
+      );
+      allow create: if esAdmin() || esRrhh() ||
+        esSupervisorDe(request.resource.data.sucursalId);
+      allow update: if esAdmin() || esRrhh() ||
+        esSupervisorDe(resource.data.sucursalId);
+      allow delete: if false;
+    }
+
+    // ---------- Cierres de periodo ----------
+    match /cierres_periodo/{id} {
+      allow read: if signedIn() && (esAdmin() || esRrhh() || rol() == 'supervisor');
+      allow create, update: if esAdmin() || esRrhh();
+      allow delete: if false;
+    }
+
+    // ---------- Eventos de integracion (reloj biometrico) ----------
+    match /integraciones_eventos/{id} {
+      allow read: if esAdmin();
+      allow create: if esAdmin();   // en produccion los escribe solo la API
+      allow update, delete: if false;
+    }
+
+    // Todo lo demas queda bloqueado
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

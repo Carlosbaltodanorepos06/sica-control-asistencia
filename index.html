@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SICA - Sistema Integral de Control de Asistencia (demostración)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#17212b;--navy:#12263f;--bg:#f3f5f7;--card:#fff;--line:#d9dfe5;--teal:#0e7c7b;--okb:#e0f3e6;--okt:#1d6b3a;--wb:#fdf1dc;--wt:#8a4f06;--bb:#fbe4e4;--bt:#a4262c}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.5 "IBM Plex Sans",system-ui,"Segoe UI",sans-serif;color:var(--ink);background:var(--bg)}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--ink);padding:.5rem .9rem;border-radius:6px}
+button.pri{background:var(--teal);border-color:var(--teal);color:#fff}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid #7cc4c3;outline-offset:2px}
+input,select,textarea{border:1px solid #b8c1ca;border-radius:6px;padding:.45rem .6rem;background:#fff;max-width:100%}
+textarea{width:100%;min-height:70px}
+label{display:block;margin:.6rem 0 .2rem;font-weight:500}
+.err{color:var(--bt);min-height:1.3em;margin:.3rem 0}
+#login{max-width:430px;margin:8vh auto;padding:0 1rem}
+#login h1{font-size:2.6rem;margin:0;letter-spacing:.02em}
+#login .role{display:block;width:100%;text-align:left;margin:.5rem 0;padding:.8rem 1rem;background:#fff}
+#login .role small{display:block;color:#5b6773}
+#shell[hidden],#login[hidden]{display:none}
+#shell{display:grid;grid-template-columns:230px 1fr;min-height:100vh}
+aside{background:var(--navy);color:#e8eef5;padding:1.2rem 0;display:flex;flex-direction:column}
+aside h2{margin:0 1.2rem .2rem;font-size:1.5rem}
+aside p{margin:0 1.2rem 1rem;font-size:.82rem;color:#a9b8c8}
+aside nav a{display:block;padding:.6rem 1.2rem;color:#e8eef5;text-decoration:none;border-left:4px solid transparent}
+aside nav a.on{background:#1b3555;border-left-color:#5fd0cd;font-weight:600}
+aside nav a:hover{background:#18304d}
+aside button{margin:1rem 1.2rem 0;background:transparent;color:#e8eef5;border-color:#5b7391}
+main{padding:1.2rem 1.6rem 3rem;min-width:0}
+.demo{background:var(--wb);color:var(--wt);border:1px solid #ecd3a1;border-radius:6px;padding:.45rem .8rem;margin-bottom:1rem;font-size:.9rem}
+h1{margin:.2rem 0;font-size:1.7rem}h2{font-size:1.15rem;margin:1.6rem 0 .5rem}
+.sub{margin:0 0 1rem;color:#5b6773}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.8rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:.8rem 1rem}
+.card b{display:block;font-size:2rem;line-height:1.1}
+.bar{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;margin:.6rem 0}
+.tw{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;min-width:560px}
+th,td{padding:.55rem .8rem;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:#eef2f5;font-weight:600;font-size:.88rem}
+tr:last-child td{border-bottom:0}
+.t{display:inline-block;padding:.1rem .55rem;border-radius:99px;font-size:.82rem;white-space:nowrap}
+.t.ok{background:var(--okb);color:var(--okt)}.t.warn{background:var(--wb);color:var(--wt)}.t.bad{background:var(--bb);color:var(--bt)}.t.demo{background:#e7edf3;color:#3b4a5a}
+.clock{background:var(--navy);color:#fff;border-radius:10px;padding:1.4rem;text-align:center;margin-bottom:1rem}
+.big{font-size:clamp(2.6rem,10vw,4.6rem);font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:.03em;line-height:1.1}
+.form{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:.6rem 1.1rem 1.1rem;max-width:560px}
+.form input,.form select{width:100%}
+.msg{padding:.6rem .9rem;border-radius:6px;margin:.6rem 0}
+.msg.ok{background:var(--okb);color:var(--okt)}.msg.warn{background:var(--wb);color:var(--wt)}.msg.bad{background:var(--bb);color:var(--bt)}
+dialog{border:1px solid var(--line);border-radius:10px;max-width:440px;width:92%}
+@media(max-width:760px){#shell{grid-template-columns:1fr}aside{padding:.8rem 0}aside nav{display:flex;flex-wrap:wrap}aside nav a{padding:.5rem .9rem;border-left:0;border-bottom:3px solid transparent}aside nav a.on{border-bottom-color:#5fd0cd}main{padding:1rem}}
+</style>
+</head>
+<body>
+
+<div id="login">
+  <h1>SICA</h1>
+  <p>Sistema Integral de Control de Asistencia, Grupo Comercial Horizonte, S.A. (empresa ficticia).</p>
+  <div class="demo">Prototipo de demostración con datos ficticios. No hay contraseñas reales ni conexión a nómina.</div>
+  <p><b>Entrar como:</b></p>
+  <button class="role" data-r="empleado">Empleado<small>EMP-001, Sucursal 1</small></button>
+  <button class="role" data-r="supervisor">Supervisor<small>Sucursal 3</small></button>
+  <button class="role" data-r="rrhh">Recursos Humanos / Nómina<small>Las 7 ubicaciones</small></button>
+  <button class="role" data-r="admin">Administrador del sistema<small>Acceso completo</small></button>
+</div>
+
+<div id="shell" hidden>
+  <aside>
+    <h2>SICA</h2><p id="who"></p>
+    <nav id="nav" aria-label="Menú principal"></nav>
+    <button id="out">Cerrar sesión</button>
+  </aside>
+  <main>
+    <div class="demo">Demostración con datos ficticios. Ningún registro es una marca laboral real ni una instrucción de pago.</div>
+    <div id="view"></div>
+  </main>
+</div>
+
+<dialog id="dlg">
+  <h2 id="dt" style="margin-top:.2rem"></h2>
+  <label for="obs">Observación (obligatoria)</label>
+  <textarea id="obs" maxlength="200"></textarea>
+  <div class="err" id="oe"></div>
+  <div class="bar"><button class="pri" id="ok" type="button">Confirmar</button><button id="no" type="button">Cancelar</button></div>
+</dialog>
+
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const SUC=['Casa Matriz','Sucursal 1','Sucursal 2','Sucursal 3','Sucursal 4','Sucursal 5','Sucursal 6'];
+const HOR={'08:00 a 17:00':[10],'09:00 a 18:00':[10],'07:30 a 16:30':[10]};
+const EMP=[['EMP-001','Empleado de prueba 001','Sucursal 1','08:00 a 17:00'],['EMP-002','Empleado de prueba 002','Sucursal 2','08:00 a 17:00'],['EMP-003','Empleado de prueba 003','Sucursal 3','09:00 a 18:00'],['EMP-004','Empleado de prueba 004','Sucursal 4','08:00 a 17:00'],['EMP-005','Empleado de prueba 005','Sucursal 5','07:30 a 16:30'],['EMP-006','Empleado de prueba 006','Sucursal 6','08:00 a 17:00']];
+const KIND={ok:['Completa','ok'],late:['Tardanza','warn'],inc:['Falta marca','warn'],irr:['Secuencia irregular','bad'],hist:['Histórica, por validar','warn']};
+const J=[['2026-10-19','EMP-001','07:56','17:02','ok'],['2026-10-19','EMP-002','08:19','17:01','late'],['2026-10-19','EMP-003','08:58','Pendiente','inc'],['2026-10-19','EMP-004','Sin marca','17:03','irr'],['2026-10-19','EMP-005','Importada de libro','Importada de libro','hist'],['2026-10-19','EMP-006','08:01','16:59','ok']];
+const INC=[{id:'INC-001',cod:'EMP-003',tipo:'Omisión de salida',fecha:'2026-10-19',motivo:'Dato de demostración: olvidé marcar la salida.',estado:'Pendiente',obs:''},{id:'INC-002',cod:'EMP-002',tipo:'Justificación',fecha:'2026-10-19',motivo:'Dato de demostración: tardanza por emergencia.',estado:'Aprobada',obs:'Aprobada en la demostración.'}];
+const AUD=[['2026-10-19 10:12','Supervisor (demo)','Aprobó incidencia','INC-002','Justificación válida','Pendiente → Aprobada']];
+const ROLES={
+ empleado:{label:'Empleado',cod:'EMP-001',suc:'Sucursal 1',menu:['inicio','marcacion','incidencias','reportes']},
+ supervisor:{label:'Supervisor',cod:'SUP-003',suc:'Sucursal 3',menu:['inicio','marcacion','personal','horarios','incidencias','reportes','auditoria']},
+ rrhh:{label:'Recursos Humanos',cod:'RRHH-001',suc:null,menu:['inicio','marcacion','personal','horarios','incidencias','reportes','auditoria']},
+ admin:{label:'Administrador',cod:'ADM-001',suc:null,menu:['inicio','marcacion','personal','horarios','incidencias','reportes','auditoria']}};
+const NAV={inicio:'Inicio',marcacion:'Marcación',personal:'Personal',horarios:'Horarios',incidencias:'Incidencias',reportes:'Reportes',auditoria:'Auditoría'};
+let ROLE=null,timer=null,nInc=3,OPEN={},M=[],RV=null;
+
+const emp=c=>EMP.find(e=>e[0]==c);
+const empSuc=c=>(emp(c)||[])[2];
+const empName=c=>(emp(c)||[,c])[1];
+const vis=c=>{const r=ROLES[ROLE];if(ROLE=='empleado')return c==r.cod;return r.suc?empSuc(c)==r.suc:true};
+const tag=(t,k)=>`<span class="t ${k}">${esc(t)}</span>`;
+const now=()=>new Date().toLocaleString('es-NI',{hour12:false});
+const aud=(a,e,m,c)=>AUD.unshift([now(),ROLES[ROLE].label+' (demo)',a,e,m,c]);
+const opts=(a,sel)=>a.map(x=>`<option${x==sel?' selected':''}>${esc(x)}</option>`).join('');
+const card=(l,n)=>`<div class="card"><b>${n}</b>${esc(l)}</div>`;
+const jtable=rows=>`<div class="tw"><table><thead><tr><th>Fecha</th><th>Código</th><th>Entrada</th><th>Salida</th><th>Estado</th></tr></thead><tbody>${rows.length?rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${tag(KIND[r[4]][0],KIND[r[4]][1])}</td></tr>`).join(''):'<tr><td colspan=5>No hay registros con estos filtros.</td></tr>'}</tbody></table></div>`;
+
+const V={},A={};
+
+V.inicio=()=>{const r=ROLES[ROLE],j=J.filter(x=>vis(x[1])),c=k=>j.filter(x=>x[4]==k).length,p=INC.filter(i=>i.estado=='Pendiente'&&vis(i.cod)).length;
+return `<h1>Inicio</h1><p class="sub">${r.label}, ${r.suc||'todas las sucursales'}. Datos de ejemplo del 19/10/2026.</p>
+<div class="cards">${card('Jornadas del día',j.length)}${card('Completas',c('ok'))}${card('Tardanzas',c('late'))}${card('Por revisar',c('inc')+c('irr')+c('hist'))}${card('Incidencias pendientes',p)}</div>
+<h2>Alertas que requieren revisión</h2>${jtable(j.filter(x=>x[4]!='ok'&&x[4]!='late'))}
+<p class="sub">El sistema nunca completa una salida faltante por su cuenta: la jornada queda pendiente hasta que se resuelva una incidencia.</p>`};
+
+V.marcacion=()=>{const r=ROLES[ROLE];return `<h1>Marcación</h1><p class="sub">${r.label}, ${r.cod}, ${r.suc||'Casa Matriz'}. Horario asignado: 08:00 a 17:00.</p>
+<section class="clock"><div class="big" id="clk"></div><div>Hora del servidor (simulada en esta demostración)</div></section>
+<div class="bar"><button class="pri" onclick="mark('entrada')">Registrar entrada</button><button onclick="mark('salida')">Registrar salida</button></div>
+<div id="msg" role="status"></div><h2>Marcas de esta sesión</h2><div id="ms"></div>`};
+A.marcacion=()=>{const t=()=>$('#clk').textContent=new Date().toLocaleTimeString('es-NI',{hour12:false});t();timer=setInterval(t,1000);list()};
+const list=()=>{const el=$('#ms');if(!el)return;const rows=M.filter(m=>m.u==ROLES[ROLE].cod);el.innerHTML=`<div class="tw"><table><thead><tr><th>Hora</th><th>Tipo</th><th>Origen</th></tr></thead><tbody>${rows.length?rows.map(m=>`<tr><td>${m.h}</td><td>${m.t}</td><td>${tag('Demostración','demo')}</td></tr>`).join(''):'<tr><td colspan=3>Todavía no hay marcas. Usa los botones de arriba.</td></tr>'}</tbody></table></div>`};
+window.mark=t=>{const u=ROLES[ROLE].cod,m=$('#msg');
+ if(t=='entrada'&&OPEN[u]){m.innerHTML='<div class="msg bad">Entrada duplicada: ya tienes una jornada abierta. No se registró la marca.</div>';return}
+ if(t=='salida'&&!OPEN[u]){m.innerHTML='<div class="msg bad">Secuencia inválida: una salida requiere una jornada abierta. No se registró la marca.</div>';return}
+ OPEN[u]=t=='entrada';M.unshift({u,t,h:new Date().toLocaleTimeString('es-NI',{hour12:false})});
+ m.innerHTML=`<div class="msg ok">Demostración: ${t} confirmada por la simulación. No es una marca laboral real.</div>`;list()};
+
+const staff=()=>EMP.filter(e=>vis(e[0]));
+V.personal=()=>`<h1>Personal</h1><p class="sub">${ROLES[ROLE].suc?'Solo ves el personal de '+ROLES[ROLE].suc+'.':'Personal de todas las sucursales.'}</p>
+<div class="bar"><label for="fs" style="margin:0">Sucursal</label><select id="fs"><option value="">Todas</option>${opts(SUC)}</select><input id="fq" placeholder="Buscar por código o nombre" aria-label="Buscar"></div><div id="tp"></div>
+${ROLE=='admin'?`<h2>Agregar empleado de demostración</h2><form class="form" id="fe" novalidate><label for="ec">Código</label><input id="ec" placeholder="EMP-007"><label for="en">Nombre</label><input id="en" placeholder="Empleado de prueba 007"><label for="es">Sucursal</label><select id="es">${opts(SUC.slice(1))}</select><div class="err" id="ee" role="alert"></div><button class="pri">Guardar empleado</button></form>`:''}`;
+A.personal=()=>{const f=()=>{const s=$('#fs').value,q=$('#fq').value.toLowerCase(),r=staff().filter(e=>(!s||e[2]==s)&&(!q||(e[0]+e[1]).toLowerCase().includes(q)));
+ $('#tp').innerHTML=`<div class="tw"><table><thead><tr><th>Código</th><th>Empleado</th><th>Sucursal</th><th>Horario</th><th>Estado</th></tr></thead><tbody>${r.length?r.map(e=>`<tr><td>${esc(e[0])}</td><td>${esc(e[1])}</td><td>${esc(e[2])}</td><td>${e[3]}</td><td>${tag('Activo','ok')}</td></tr>`).join(''):'<tr><td colspan=5>No hay personal con ese filtro.</td></tr>'}</tbody></table></div>`};
+ $('#fs').oninput=$('#fq').oninput=f;f();
+ const fe=$('#fe');if(fe)fe.onsubmit=ev=>{ev.preventDefault();const c=$('#ec').value.trim().toUpperCase(),n=$('#en').value.trim(),s=$('#es').value,e=$('#ee');
+  if(!c||!n){e.textContent='Completa el código y el nombre.';return}
+  if(emp(c)){e.textContent='Ese código ya existe. Usa otro.';return}
+  EMP.push([c,n,s,'08:00 a 17:00']);aud('Creó empleado',c,'Alta de demostración','Nuevo → Activo');go()}};
+
+V.horarios=()=>`<h1>Horarios y reglas</h1><p class="sub">Las reglas se configuran en un solo lugar para que ninguna sucursal use criterios distintos.</p>
+<div class="tw"><table><thead><tr><th>Horario</th><th>Tolerancia</th><th>Cierre administrativo</th><th>Personal asignado</th></tr></thead><tbody>${Object.keys(HOR).map(h=>`<tr><td>${h}</td><td>${HOR[h][0]} minutos</td><td>23:59</td><td>${EMP.filter(e=>e[3]==h).length}</td></tr>`).join('')}</tbody></table></div>
+<p class="sub">${ROLE=='admin'?'Como administrador podrías editar estos valores en la versión conectada.':'Solo el administrador puede cambiar estos valores.'}</p>`;
+
+V.incidencias=()=>{const own=ROLE=='empleado',w=staff().map(e=>e[0]);
+return `<h1>Incidencias y permisos</h1><p class="sub">Justificaciones, permisos y omisiones de marca.</p>
+<form class="form" id="fi" novalidate><label for="iw">Trabajador</label><select id="iw">${opts(w,own?ROLES[ROLE].cod:'')}</select>
+<label for="it">Tipo de solicitud</label><select id="it">${opts(['Omisión de entrada','Omisión de salida','Justificación','Permiso'])}</select>
+<label for="id">Fecha</label><input type="date" id="id"><label for="im">Motivo</label><textarea id="im" maxlength="200"></textarea>
+<label for="ia">Comprobante (opcional)</label><input type="file" id="ia"><small>En el prototipo los archivos no se guardan.</small>
+<div class="err" id="ie" role="alert"></div><button class="pri">Enviar solicitud</button></form>
+<h2>Solicitudes</h2><div id="il"></div>`};
+const ilist=()=>{const can=ROLE!='empleado',r=INC.filter(i=>vis(i.cod));
+ $('#il').innerHTML=`<div class="tw"><table><thead><tr><th>N.º</th><th>Empleado</th><th>Tipo</th><th>Fecha</th><th>Estado</th><th>Observación</th><th></th></tr></thead><tbody>${r.length?r.map(i=>`<tr><td>${i.id}</td><td>${esc(i.cod)}</td><td>${i.tipo}</td><td>${i.fecha}</td><td>${tag(i.estado,i.estado=='Aprobada'?'ok':i.estado=='Rechazada'?'bad':'warn')}</td><td>${esc(i.obs||'')}</td><td>${can&&i.estado=='Pendiente'?`<button onclick="review('${i.id}','Aprobada')">Aprobar</button> <button onclick="review('${i.id}','Rechazada')">Rechazar</button>`:''}</td></tr>`).join(''):'<tr><td colspan=7>No hay solicitudes en tu ámbito.</td></tr>'}</tbody></table></div>`};
+A.incidencias=()=>{ilist();$('#fi').onsubmit=ev=>{ev.preventDefault();const f=$('#id').value,m=$('#im').value.trim(),e=$('#ie');
+ if(!f){e.textContent='Selecciona la fecha de la solicitud.';return}
+ if(!m){e.textContent='Escribe el motivo para continuar.';return}
+ const id='INC-'+String(nInc++).padStart(3,'0');INC.unshift({id,cod:$('#iw').value,tipo:$('#it').value,fecha:f,motivo:m,estado:'Pendiente',obs:''});
+ aud('Creó solicitud',id,m,'Nueva → Pendiente');go()}};
+window.review=(id,est)=>{RV=[id,est];$('#dt').textContent=(est=='Aprobada'?'Aprobar ':'Rechazar ')+id;$('#obs').value='';$('#oe').textContent='';$('#dlg').showModal()};
+$('#no').onclick=()=>$('#dlg').close();
+$('#ok').onclick=()=>{const o=$('#obs').value.trim();if(!o){$('#oe').textContent='Escribe una observación para continuar.';return}
+ const i=INC.find(x=>x.id==RV[0]);aud(RV[1]=='Aprobada'?'Aprobó incidencia':'Rechazó incidencia',i.id,o,'Pendiente → '+RV[1]);i.estado=RV[1];i.obs=o;$('#dlg').close();go()};
+
+V.reportes=()=>`<h1>Reportes</h1><p class="sub">Consolidado por período, sucursal y empleado.</p>
+<div class="msg warn">Consolidado de demostración. No es un cálculo oficial de nómina ni autoriza pagos.</div>
+<div class="bar"><label for="rd" style="margin:0">Desde</label><input type="date" id="rd" value="2026-10-01"><label for="rh" style="margin:0">Hasta</label><input type="date" id="rh" value="2026-10-31">
+<select id="rs" aria-label="Sucursal"><option value="">Todas las sucursales</option>${opts(SUC)}</select><select id="re" aria-label="Empleado"><option value="">Todos los empleados</option>${staff().map(e=>`<option>${e[0]}</option>`).join('')}</select>
+<button onclick="expo()">Exportar</button></div><div id="rb"></div>`;
+A.reportes=()=>{const f=()=>{const d=$('#rd').value,h=$('#rh').value,s=$('#rs').value,e=$('#re').value,
+ j=J.filter(x=>vis(x[1])&&(!d||x[0]>=d)&&(!h||x[0]<=h)&&(!s||empSuc(x[1])==s)&&(!e||x[1]==e)),pend=j.filter(x=>['inc','irr','hist'].includes(x[4])).length;
+ $('#rb').innerHTML=`<div class="cards">${card('Jornadas',j.length)}${card('Tardanzas',j.filter(x=>x[4]=='late').length)}${card('Registros pendientes',pend)}</div>${pend?`<div class="msg bad">Hay ${pend} registro(s) pendiente(s). Deben resolverse antes de enviar información a nómina.</div>`:''}<h2>Detalle</h2>${jtable(j)}`};
+ ['rd','rh','rs','re'].forEach(i=>$('#'+i).oninput=f);f()};
+window.expo=()=>{$('#rb').insertAdjacentHTML('afterbegin','<div class="msg warn">La exportación a Excel/CSV y PDF solo existe en la versión conectada. En la demostración no se genera ningún archivo.</div>')};
+
+V.auditoria=()=>`<h1>Auditoría</h1><p class="sub">Solo lectura. Cada corrección conserva quién la hizo, cuándo y por qué. El dato original nunca se borra.</p>
+<div class="tw"><table><thead><tr><th>Fecha y hora</th><th>Usuario</th><th>Acción</th><th>Registro</th><th>Motivo</th><th>Cambio</th></tr></thead><tbody>${AUD.map(a=>`<tr>${a.map(c=>`<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+
+function go(){
+ if(!ROLE)return;clearInterval(timer);
+ const m=ROLES[ROLE].menu,v=location.hash.slice(1)||'inicio';
+ $('#who').textContent=ROLES[ROLE].label+(ROLES[ROLE].suc?', '+ROLES[ROLE].suc:'');
+ $('#nav').innerHTML=m.map(k=>`<a href="#${k}"${k==v?' class="on"':''}>${NAV[k]}</a>`).join('');
+ if(!NAV[v]||!m.includes(v)){$('#view').innerHTML=`<h1>Sin acceso</h1><div class="msg bad">Tu rol (${ROLES[ROLE].label}) no tiene permiso para esta sección. En la versión conectada, además, la API y las reglas de la base de datos también la bloquean.</div>`;return}
+ $('#view').innerHTML=V[v]();if(A[v])A[v]()}
+document.querySelectorAll('.role').forEach(b=>b.onclick=()=>{ROLE=b.dataset.r;$('#login').hidden=true;$('#shell').hidden=false;location.hash='inicio';go()});
+$('#out').onclick=()=>{ROLE=null;clearInterval(timer);$('#shell').hidden=true;$('#login').hidden=false;history.replaceState(null,'',location.pathname)};
+addEventListener('hashchange',go);
+</script>
+</body>
+</html>
